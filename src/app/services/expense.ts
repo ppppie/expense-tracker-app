@@ -54,6 +54,18 @@ export class ExpenseService {
 
   searchText = signal<string>('');
 
+  //dashboard enhancement dashboad card toggles
+  selectedDashboardCard = signal<string>('');
+  toggleDashboardCard(card: string) {
+    if (this.selectedDashboardCard() === card) {
+      this.selectedDashboardCard.set('');
+
+      return;
+    }
+
+    this.selectedDashboardCard.set(card);
+  }
+
   // Filtered Expenses
   filteredExpenses = computed(() => {
     let filtered = this.expenses().filter((expense) => {
@@ -100,6 +112,62 @@ export class ExpenseService {
   );
 
   currentBalance = computed(() => this.totalIncome() - this.totalExpenseAmount());
+
+  incomeExpenseRatio = computed(() => {
+    const expenses = this.totalExpenseAmount();
+
+    if (expenses === 0) {
+      return 0;
+    }
+
+    return this.totalIncome() / expenses;
+  });
+
+  expenseCategoryTotals = computed(() => {
+    const totals: Record<string, number> = {};
+
+    this.expenses()
+
+      .filter((expense) => expense.type === 'Expense')
+
+      .forEach((expense) => {
+        totals[expense.category] = (totals[expense.category] || 0) + expense.amount;
+      });
+
+    return Object.entries(totals)
+
+      .sort((a, b) => b[1] - a[1]);
+  });
+
+  transactionCategoryCounts = computed(() => {
+    const counts: Record<string, number> = {};
+
+    this.expenses()
+
+      .forEach((expense) => {
+        counts[expense.category] = (counts[expense.category] || 0) + 1;
+      });
+
+    return Object.entries(counts)
+
+      .sort((a, b) => b[1] - a[1]);
+  });
+
+  incomeCategoryTotals = computed(() => {
+    const totals: Record<string, number> = {};
+
+    this.expenses()
+
+      .filter((expense) => expense.type === 'Income')
+
+      .forEach((expense) => {
+        totals[expense.category] = (totals[expense.category] || 0) + expense.amount;
+      });
+
+    return Object.entries(totals)
+
+      .sort((a, b) => b[1] - a[1]);
+  });
 
   highestExpense = computed(() => {
     const expenseList = this.expenses();

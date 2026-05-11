@@ -3,22 +3,44 @@
 <div class="row g-4">
   <!-- Total Income -->
   <div class="col-md-6 col-lg-3">
-    <div class="card shadow-sm border-success h-100">
+    <div
+      class="card shadow-sm h-100 dashboard-card"
+      (click)="expenseService.toggleDashboardCard('income')"
+      [class.border-success]="expenseService.selectedDashboardCard() !== 'income'"
+      [class.bg-success]="expenseService.selectedDashboardCard() === 'income'"
+      [class.text-white]="expenseService.selectedDashboardCard() === 'income'"
+    >
       <div class="card-body text-center">
         <h5 class="card-title">Total Income</h5>
 
-        <h2 class="text-success">${{ expenseService.totalIncome().toFixed(2) }}</h2>
+        <h2
+          [class.text-success]="expenseService.selectedDashboardCard() !== 'income'"
+          [class.text-white]="expenseService.selectedDashboardCard() === 'income'"
+        >
+          ${{ expenseService.totalIncome().toFixed(2) }}
+        </h2>
       </div>
     </div>
   </div>
 
   <!-- Total Expenses -->
   <div class="col-md-6 col-lg-3">
-    <div class="card shadow-sm border-danger h-100">
+    <div
+      class="card shadow-sm h-100 dashboard-card"
+      (click)="expenseService.toggleDashboardCard('expenses')"
+      [class.border-danger]="expenseService.selectedDashboardCard() !== 'expenses'"
+      [class.bg-danger]="expenseService.selectedDashboardCard() === 'expenses'"
+      [class.text-white]="expenseService.selectedDashboardCard() === 'expenses'"
+    >
       <div class="card-body text-center">
         <h5 class="card-title">Total Expenses</h5>
 
-        <h2 class="text-danger">${{ expenseService.totalExpenseAmount().toFixed(2) }}</h2>
+        <h2
+          [class.text-danger]="expenseService.selectedDashboardCard() !== 'expenses'"
+          [class.text-white]="expenseService.selectedDashboardCard() === 'expenses'"
+        >
+          ${{ expenseService.totalExpenseAmount().toFixed(2) }}
+        </h2>
       </div>
     </div>
   </div>
@@ -26,16 +48,35 @@
   <!-- Current Balance -->
   <div class="col-md-6 col-lg-3">
     <div
-      class="card shadow-sm h-100"
-      [class.border-success]="expenseService.currentBalance() >= 0"
-      [class.border-danger]="expenseService.currentBalance() < 0"
+      class="card shadow-sm h-100 dashboard-card"
+      (click)="expenseService.toggleDashboardCard('balance')"
+      [class.border-success]="
+        expenseService.selectedDashboardCard() !== 'balance' && expenseService.currentBalance() >= 0
+      "
+      [class.border-danger]="
+        expenseService.selectedDashboardCard() !== 'balance' && expenseService.currentBalance() < 0
+      "
+      [class.bg-success]="
+        expenseService.selectedDashboardCard() === 'balance' && expenseService.currentBalance() >= 0
+      "
+      [class.bg-danger]="
+        expenseService.selectedDashboardCard() === 'balance' && expenseService.currentBalance() < 0
+      "
+      [class.text-white]="expenseService.selectedDashboardCard() === 'balance'"
     >
       <div class="card-body text-center">
         <h5 class="card-title">Current Balance</h5>
 
         <h2
-          [class.text-success]="expenseService.currentBalance() >= 0"
-          [class.text-danger]="expenseService.currentBalance() < 0"
+          [class.text-success]="
+            expenseService.selectedDashboardCard() !== 'balance' &&
+            expenseService.currentBalance() >= 0
+          "
+          [class.text-danger]="
+            expenseService.selectedDashboardCard() !== 'balance' &&
+            expenseService.currentBalance() < 0
+          "
+          [class.text-white]="expenseService.selectedDashboardCard() === 'balance'"
         >
           ${{ expenseService.currentBalance().toFixed(2) }}
         </h2>
@@ -45,14 +86,218 @@
 
   <!-- Transaction Count -->
   <div class="col-md-6 col-lg-3">
-    <div class="card shadow-sm border-primary h-100">
+    <div
+      class="card shadow-sm h-100 dashboard-card"
+      (click)="expenseService.toggleDashboardCard('transactions')"
+      [class.border-primary]="expenseService.selectedDashboardCard() !== 'transactions'"
+      [class.bg-primary]="expenseService.selectedDashboardCard() === 'transactions'"
+      [class.text-white]="expenseService.selectedDashboardCard() === 'transactions'"
+    >
       <div class="card-body text-center">
         <h5 class="card-title">Transactions</h5>
 
-        <h2 class="text-primary">
+        <h2
+          [class.text-primary]="expenseService.selectedDashboardCard() !== 'transactions'"
+          [class.text-white]="expenseService.selectedDashboardCard() === 'transactions'"
+        >
           {{ expenseService.transactionCount() }}
         </h2>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Default Dashboard Overview -->
+@if (expenseService.selectedDashboardCard() === '') {
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="mb-4">Financial Overview</h3>
+
+      <!-- Income Expense Ratio -->
+      <div class="text-center mt-4 mb-4">
+        <h5>
+          Income-to-Expense Ratio:
+
+          <span
+            [class.text-success]="expenseService.incomeExpenseRatio() >= 1"
+            [class.text-danger]="expenseService.incomeExpenseRatio() < 1"
+          >
+            {{ expenseService.incomeExpenseRatio().toFixed(2) }}x
+          </span>
+        </h5>
+      </div>
+      <!-- Income vs Expenses -->
+      <div class="mb-5">
+        <div class="progress" style="height: 32px">
+          <div
+            class="progress-bar bg-success"
+            [style.width.%]="
+              (expenseService.totalIncome() /
+                (expenseService.totalIncome() + expenseService.totalExpenseAmount())) *
+              100
+            "
+          ></div>
+
+          <div
+            class="progress-bar bg-danger"
+            [style.width.%]="
+              (expenseService.totalExpenseAmount() /
+                (expenseService.totalIncome() + expenseService.totalExpenseAmount())) *
+              100
+            "
+          ></div>
+        </div>
+      </div>
+
+      <!-- Expenses -->
+      <div class="mb-4">
+        <div class="d-flex justify-content-between mb-2">
+          <strong> Expenses By Category </strong>
+
+          <!-- <span class="text-danger"> ${{ expenseService.totalExpenseAmount().toFixed(2) }} </span> -->
+        </div>
+        <!-- //progress bar -->
+        <div class="progress" style="height: 32px">
+          @for (category of expenseService.expenseCategoryTotals(); track category[0]) {
+            <div
+              class="progress-bar"
+              [style.width.%]="(category[1] / expenseService.totalExpenseAmount()) * 100"
+              [attr.title]="category[0] + ': $' + category[1]"
+              [class.bg-primary]="$index === 0"
+              [class.bg-warning]="$index === 1"
+              [class.bg-danger]="$index === 2"
+              [class.bg-info]="$index === 3"
+              [class.bg-dark]="$index >= 4"
+              [class.bg-success]="$index === 5"
+            ></div>
+          }
+        </div>
+
+        <div class="row mt-3">
+          @for (category of expenseService.expenseCategoryTotals(); track category[0]) {
+            <div class="col-md-6 mb-2">
+              <div class="d-flex align-items-center">
+                <div
+                  class="legend-color me-2"
+                  [class.bg-primary]="$index === 0"
+                  [class.bg-warning]="$index === 1"
+                  [class.bg-danger]="$index === 2"
+                  [class.bg-info]="$index === 3"
+                  [class.bg-dark]="$index >= 4"
+                  [class.bg-success]="$index === 5"
+                ></div>
+
+                <span>
+                  {{ category[0] }}
+
+                  -
+
+                  {{ ((category[1] / expenseService.totalExpenseAmount()) * 100).toFixed(0) }}%
+                </span>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!------------------ ANALYTICS SECTION ------------------------------------------->
+
+<!-- Expense Analytics -->
+@if (expenseService.selectedDashboardCard() === 'expenses') {
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="mb-4">Spending Breakdown</h3>
+
+      @for (category of expenseService.expenseCategoryTotals(); track category[0]) {
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <strong>
+              {{ category[0] }}
+            </strong>
+
+            <span> ${{ category[1].toFixed(2) }} </span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- Transaction Analytics -->
+@if (expenseService.selectedDashboardCard() === 'transactions') {
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="mb-4">Transaction Categories</h3>
+
+      @for (category of expenseService.transactionCategoryCounts(); track category[0]) {
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <strong>
+              {{ category[0] }}
+            </strong>
+
+            <span> {{ category[1] }} Transactions </span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- Income Analytics -->
+@if (expenseService.selectedDashboardCard() === 'income') {
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="mb-4">Income Sources</h3>
+
+      @for (category of expenseService.incomeCategoryTotals(); track category[0]) {
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <strong>
+              {{ category[0] }}
+            </strong>
+
+            <span> ${{ category[1].toFixed(2) }} </span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+<!-- Balance Analytics -->
+@if (expenseService.selectedDashboardCard() === 'balance') {
+  <div class="card shadow-sm mt-5">
+    <div class="card-body">
+      <h3 class="mb-4">Financial Summary</h3>
+
+      <div class="row text-center">
+        <div class="col-md-4 mb-3">
+          <h5 class="text-success">Total Income</h5>
+
+          <h3>${{ expenseService.totalIncome().toFixed(2) }}</h3>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <h5 class="text-danger">Total Expenses</h5>
+
+          <h3>${{ expenseService.totalExpenseAmount().toFixed(2) }}</h3>
+        </div>
+
+        <div class="col-md-4 mb-3">
+          <h5
+            [class.text-success]="expenseService.currentBalance() >= 0"
+            [class.text-danger]="expenseService.currentBalance() < 0"
+          >
+            Current Balance
+          </h5>
+
+          <h3>${{ expenseService.currentBalance().toFixed(2) }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+}
