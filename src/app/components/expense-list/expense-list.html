@@ -1,10 +1,91 @@
 <h1 class="text-center mb-5">Expense List</h1>
+<!-- Search -->
+<div class="mb-4">
+  <label class="form-label"> Search Transactions </label>
+
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Search by title..."
+    [ngModel]="expenseService.searchText()"
+    (ngModelChange)="expenseService.searchText.set($event)"
+  />
+</div>
+
+<div class="row mb-4">
+  <!-- Category Filter -->
+  <div class="col-md-6 mb-3">
+    <label class="form-label"> Filter By Category </label>
+
+    <!-- //Category Filter Dropdown -->
+    <select
+      class="form-select"
+      [ngModel]="expenseService.selectedCategory()"
+      (ngModelChange)="expenseService.selectedCategory.set($event)"
+    >
+      <option value="All">All Categories</option>
+
+      @for (category of expenseService.categories(); track category) {
+        <option [value]="category">
+          {{ category }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <!-- Type Filter -->
+  <div class="col-md-6 mb-3">
+    <label class="form-label"> Filter By Type </label>
+
+    <select
+      class="form-select"
+      [ngModel]="expenseService.selectedType()"
+      (ngModelChange)="expenseService.selectedType.set($event)"
+    >
+      <option value="All">All Types</option>
+
+      <option value="Expense">Expense</option>
+
+      <option value="Income">Income</option>
+    </select>
+  </div>
+
+  <!-- Sort Filter -->
+  <div class="col-md-6 mb-3">
+    <label class="form-label"> Sort By </label>
+
+    <!-- //sort dropdown filter -->
+    <select
+      class="form-select"
+      [ngModel]="expenseService.selectedSort()"
+      (ngModelChange)="expenseService.selectedSort.set($event)"
+    >
+      <option value="Default">Default</option>
+
+      <option value="Newest">Newest First</option>
+
+      <option value="Oldest">Oldest First</option>
+    </select>
+  </div>
+
+  <!-- Date Filter -->
+  <div class="col-md-6 mb-3">
+    <label class="form-label"> Filter By Date </label>
+
+    <input
+      type="date"
+      class="form-control"
+      [ngModel]="expenseService.selectedDate()"
+      (ngModelChange)="expenseService.selectedDate.set($event)"
+    />
+  </div>
+</div>
 
 @if (expenseService.expenses().length === 0) {
   <div class="alert alert-info text-center">No expenses added yet.</div>
 } @else {
   <div class="row g-4">
-    @for (expense of expenseService.expenses(); track expense.id) {
+    @for (expense of expenseService.filteredExpenses(); track expense.id) {
       <div class="col-md-6 col-lg-4">
         <app-expense-item [expense]="expense"> </app-expense-item>
       </div>

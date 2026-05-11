@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ExpenseService {
+  // Firebase / Firestore
   firestore = inject(Firestore);
 
   expenseCollection = collection(this.firestore, 'expenses');
@@ -28,6 +29,7 @@ export class ExpenseService {
     });
   }
 
+  // Expense Data
   expenses = signal<Expense[]>([]);
 
   categories = signal<ExpenseCategory[]>([
@@ -41,6 +43,44 @@ export class ExpenseService {
     'Other',
   ]);
 
+  // Filter / Search Signals
+  selectedCategory = signal<string>('All');
+
+  selectedType = signal<string>('All');
+
+  selectedSort = signal<string>('Default');
+
+  selectedDate = signal<string>('');
+
+  searchText = signal<string>('');
+
+  // Filtered Expenses
+  filteredExpenses = computed(() => {
+    let filtered = this.expenses().filter((expense) => {
+      const matchesCategory =
+        this.selectedCategory() === 'All' || expense.category === this.selectedCategory();
+
+      const matchesType = this.selectedType() === 'All' || expense.type === this.selectedType();
+
+      const matchesDate = this.selectedDate() === '' || expense.date === this.selectedDate();
+
+      const matchesSearch = expense.title.toLowerCase().includes(this.searchText().toLowerCase());
+
+      return matchesCategory && matchesType && matchesDate && matchesSearch;
+    });
+
+    if (this.selectedSort() === 'Newest') {
+      filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
+    if (this.selectedSort() === 'Oldest') {
+      filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    }
+
+    return filtered;
+  });
+
+  // Dashboard Statistics
   totalExpenses = computed(() =>
     this.expenses().reduce((total, expense) => total + expense.amount, 0),
   );
@@ -81,6 +121,7 @@ export class ExpenseService {
     return this.totalExpenses() / count;
   });
 
+  // Add Expense
   async addExpense(expense: Expense) {
     await addDoc(this.expenseCollection, {
       title: expense.title,
@@ -92,14 +133,14 @@ export class ExpenseService {
     });
   }
 
-  //delete an expense by id, we use the id to get the document reference and then delete the document
+  // Delete Expense
   async deleteExpense(id: string) {
     const expenseDoc = doc(this.firestore, `expenses/${id}`);
 
     await deleteDoc(expenseDoc);
   }
 
-  //update an expense by id, we use the id to get the document reference and then update the document with the new values of the expense
+  // Update Expense
   async updateExpense(updatedExpense: Expense) {
     const expenseDoc = doc(this.firestore, `expenses/${updatedExpense.id}`);
 
@@ -112,7 +153,8 @@ export class ExpenseService {
       type: updatedExpense.type,
     });
   }
-  //get an expense by id, used for editing an expense to get the current values of the expense before updating it
+
+  // Get Expense By ID
   getExpenseById(id: string) {
     return this.expenses().find((expense) => expense.id === id);
   }

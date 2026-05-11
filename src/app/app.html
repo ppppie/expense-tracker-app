@@ -1,20 +1,18 @@
-<!-- //navbar and router outlet for the app -->
-<nav class="navbar navbar-dark bg-dark px-4">
-  <!-- //container for the navbar with brand and links to different pages -->
-  <div class="container-fluid">
-    <a class="navbar-brand">Maddie's Expense Tracker</a>
+<mat-toolbar>
+  <div class="logo-box me-4">
+    <div>EXPENSE</div>
 
-    <!-- //d-flex puts items side by side horizontally and gap-2 adds space between the buttons -->
-    <div class="d-flex gap-2">
-      <!-- //routerLink is angular that means when clicked, go to /add, /expenses, or / for the dashboard -->
-      <button class="btn btn-light" routerLink="/">Dashboard</button>
+    <div>TRACKER</div>
 
-      <button class="btn btn-light" routerLink="/add">Add Expense</button>
-
-      <button class="btn btn-light" routerLink="/expenses">View Expenses</button>
-    </div>
+    <div class="logo-subtitle">by Maddie</div>
   </div>
-</nav>
+
+  <button mat-button [routerLink]="['/']">Dashboard</button>
+
+  <button mat-button [routerLink]="['/add']">Add Expense</button>
+
+  <button mat-button [routerLink]="['/expenses']">View Expenses</button>
+</mat-toolbar>
 
 <div class="container mt-4">
   <router-outlet></router-outlet>
