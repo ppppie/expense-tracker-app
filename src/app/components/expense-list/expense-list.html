@@ -1,1 +1,13 @@
-<p>expense-list works!</p>
+<h1 class="text-center mb-5">Expense List</h1>
+
+@if (expenseService.expenses().length === 0) {
+  <div class="alert alert-info text-center">No expenses added yet.</div>
+} @else {
+  <div class="row g-4">
+    @for (expense of expenseService.expenses(); track expense.id) {
+      <div class="col-md-6 col-lg-4">
+        <app-expense-item [expense]="expense"> </app-expense-item>
+      </div>
+    }
+  </div>
+}

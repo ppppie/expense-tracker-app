@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  background-color: #f5f5f5;
+}
+
+.card {
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+button {
+  cursor: pointer;
+}
+
+.container {
+  padding-bottom: 40px;
+}
