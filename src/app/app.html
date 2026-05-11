@@ -1,17 +1,37 @@
 <mat-toolbar>
-  <div class="logo-box me-4">
-    <div>EXPENSE</div>
-
-    <div>TRACKER</div>
-
+  <div class="logo-box me-4" routerLink="/">
+    <div>EXPENSE TRACKER</div>
     <div class="logo-subtitle">by Maddie</div>
   </div>
 
-  <button mat-button [routerLink]="['/']">Dashboard</button>
+  <div class="nav-buttons">
+    <button
+      mat-button
+      routerLink="/"
+      routerLinkActive="active-nav"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Dashboard
+    </button>
 
-  <button mat-button [routerLink]="['/add']">Add Expense</button>
+    <button
+      mat-button
+      routerLink="/add"
+      routerLinkActive="active-nav"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Add Expense
+    </button>
 
-  <button mat-button [routerLink]="['/expenses']">View Expenses</button>
+    <button
+      mat-button
+      routerLink="/expenses"
+      routerLinkActive="active-nav"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      View Expenses
+    </button>
+  </div>
 </mat-toolbar>
 
 <div class="container mt-4">
