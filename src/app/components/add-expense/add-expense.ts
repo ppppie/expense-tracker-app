@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ExpenseService } from '../../services/expense';
-import { ExpenseCategory } from '../../../models/expense.model';
+import { ExpenseCategory, TransactionType } from '../../../models/expense.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,6 +18,10 @@ export class AddExpense {
   amount = 0;
   category: ExpenseCategory = 'Other';
 
+  date = new Date().toISOString().split('T')[0];
+  notes = '';
+  type: TransactionType = 'Expense';
+
   addExpense() {
     if (!this.title || this.amount <= 0) {
       return;
@@ -29,11 +33,18 @@ export class AddExpense {
       title: this.title,
       amount: this.amount,
       category: this.category,
+      date: this.date,
+      notes: this.notes,
+      type: this.type,
     });
 
     this.title = '';
     this.amount = 0;
     this.category = 'Other';
+
+    this.date = new Date().toISOString().split('T')[0];
+    this.notes = '';
+    this.type = 'Expense';
 
     this.router.navigate(['/expenses']);
   }

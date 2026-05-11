@@ -4,12 +4,25 @@
       <div class="card-body">
         <h2 class="text-center mb-4">Add Expense</h2>
 
+        <!-- Transaction Type -->
+        <div class="mb-3">
+          <label class="form-label"> Transaction Type </label>
+
+          <select class="form-select" [(ngModel)]="type">
+            <option value="Expense">Expense</option>
+
+            <option value="Income">Income</option>
+          </select>
+        </div>
+
+        <!-- Expense Title -->
         <div class="mb-3">
           <label class="form-label"> Expense Title </label>
 
           <input type="text" class="form-control" [(ngModel)]="title" />
         </div>
 
+        <!-- Amount -->
         <div class="mb-3">
           <label class="form-label"> Amount </label>
 
@@ -20,6 +33,7 @@
           </div>
         </div>
 
+        <!-- Category -->
         <div class="mb-4">
           <label class="form-label"> Category </label>
 
@@ -32,6 +46,21 @@
           </select>
         </div>
 
+        <!-- Date -->
+        <div class="mb-3">
+          <label class="form-label"> Date </label>
+
+          <input type="date" class="form-control" [(ngModel)]="date" />
+        </div>
+
+        <!-- Notes -->
+        <div class="mb-4">
+          <label class="form-label"> Notes </label>
+
+          <textarea class="form-control" rows="3" [(ngModel)]="notes"> </textarea>
+        </div>
+
+        <!-- Submit Button -->
         <div class="d-grid">
           <button class="btn btn-primary" (click)="addExpense()">Add Expense</button>
         </div>
