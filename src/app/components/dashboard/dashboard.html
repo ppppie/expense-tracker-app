@@ -149,10 +149,20 @@
         </div>
       </div>
 
+      <!-- Expense Pie Chart -->
+      <div class="mt-4">
+        <h5 class="text-center mb-4">Expenses By Category</h5>
+
+        <div style="max-width: 500px; margin: 0 auto">
+          <canvas baseChart [data]="pieChartData()" [options]="pieChartOptions" [type]="'pie'">
+          </canvas>
+        </div>
+      </div>
+
       <!-- Expenses -->
       <div class="mb-4">
         <div class="d-flex justify-content-between mb-2">
-          <strong> Expenses By Category </strong>
+          <!-- <strong> Expenses By Category </strong> -->
 
           <!-- <span class="text-danger"> ${{ expenseService.totalExpenseAmount().toFixed(2) }} </span> -->
         </div>
