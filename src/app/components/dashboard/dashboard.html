@@ -1,0 +1,45 @@
+<h1 class="text-center mb-5">Dashboard</h1>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card border-primary shadow-sm">
+      <div class="card-body text-center">
+        <h3>Total Expenses</h3>
+
+        <h2 class="text-primary">${{ expenseService.totalExpenses().toFixed(2) }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-success shadow-sm">
+      <div class="card-body text-center">
+        <h3>Number of Expenses</h3>
+
+        <h2 class="text-success">
+          {{ expenseService.transactionCount() }}
+        </h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-success shadow-sm">
+      <div class="card-body text-center">
+        <h3>Highest Expense</h3>
+
+        <h2 class="text-success">${{ expenseService.highestExpense().toFixed(2) }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-success shadow-sm">
+      <div class="card-body text-center">
+        <h3>Average Expense per Transaction</h3>
+
+        <h2 class="text-success">${{ expenseService.averageExpense().toFixed(2) }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
