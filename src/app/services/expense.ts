@@ -11,6 +11,7 @@ import {
 import { inject } from '@angular/core';
 import { Expense, ExpenseCategory } from '../../models/expense.model';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ import { Observable } from 'rxjs';
 export class ExpenseService {
   // Firebase / Firestore
   firestore = inject(Firestore);
+  authService = inject(AuthService);
 
   expenseCollection = collection(this.firestore, 'expenses');
 
@@ -25,7 +27,13 @@ export class ExpenseService {
     collectionData(this.expenseCollection, {
       idField: 'id',
     }).subscribe((data) => {
-      this.expenses.set(data as Expense[]);
+      const currentUserId = this.authService.currentUser()?.uid;
+
+      const filteredExpenses = (data as Expense[]).filter(
+        (expense) => expense.userId === currentUserId,
+      );
+
+      this.expenses.set(filteredExpenses);
     });
   }
 
@@ -87,6 +95,14 @@ export class ExpenseService {
 
     if (this.selectedSort() === 'Oldest') {
       filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    }
+
+    if (this.selectedSort() === 'Highest Amount') {
+      filtered.sort((a, b) => b.amount - a.amount);
+    }
+
+    if (this.selectedSort() === 'Lowest Amount') {
+      filtered.sort((a, b) => a.amount - b.amount);
     }
 
     return filtered;
@@ -198,6 +214,7 @@ export class ExpenseService {
       date: expense.date,
       notes: expense.notes,
       type: expense.type,
+      userId: this.authService.currentUser()?.uid,
     });
   }
 

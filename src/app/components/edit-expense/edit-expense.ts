@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExpenseService } from '../../services/expense';
 import { ExpenseCategory, TransactionType } from '../../../models/expense.model';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-edit-expense',
@@ -14,6 +15,7 @@ export class EditExpense {
   expenseService = inject(ExpenseService);
   route = inject(ActivatedRoute);
   router = inject(Router);
+  authService = inject(AuthService);
 
   expenseId = '';
 
@@ -27,6 +29,12 @@ export class EditExpense {
 
   // Initialize the form with the existing expense data -- ai suggestion
   constructor() {
+    if (!this.authService.currentUser()) {
+      this.router.navigate(['/login']);
+
+      return;
+    }
+
     this.expenseId = this.route.snapshot.paramMap.get('id') ?? '';
 
     const expense = this.expenseService.getExpenseById(this.expenseId);

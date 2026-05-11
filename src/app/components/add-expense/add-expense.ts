@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ExpenseService } from '../../services/expense';
 import { ExpenseCategory, TransactionType } from '../../../models/expense.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-add-expense',
@@ -11,6 +12,13 @@ import { Router } from '@angular/router';
   styleUrl: './add-expense.css',
 })
 export class AddExpense {
+  authService = inject(AuthService);
+
+  constructor() {
+    if (!this.authService.currentUser()) {
+      this.router.navigate(['/login']);
+    }
+  }
   expenseService = inject(ExpenseService);
   router = inject(Router);
 

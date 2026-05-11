@@ -24,4 +24,6 @@ export interface Expense {
   notes: string;
 
   type: TransactionType;
+
+  userId?: string;
 }

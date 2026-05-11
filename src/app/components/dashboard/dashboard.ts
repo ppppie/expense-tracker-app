@@ -3,6 +3,8 @@ import { ExpenseService } from '../../services/expense';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 import { Chart, PieController, ArcElement, Tooltip, Legend } from 'chart.js';
+import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
 
 Chart.register(PieController, ArcElement, Tooltip, Legend);
 
@@ -13,6 +15,16 @@ Chart.register(PieController, ArcElement, Tooltip, Legend);
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
+  authService = inject(AuthService);
+
+  router = inject(Router);
+
+  constructor() {
+    if (!this.authService.currentUser()) {
+      this.router.navigate(['/login']);
+    }
+  }
+
   pieChartData = computed<ChartData<'pie'>>(() => ({
     labels: this.expenseService.expenseCategoryTotals().map((category) => category[0]),
 

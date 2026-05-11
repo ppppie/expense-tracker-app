@@ -31,9 +31,19 @@
     >
       View Expenses
     </button>
+
+    <!-- Auth Buttons -->
+    @if (!authService.currentUser()) {
+      <button mat-button routerLink="/login" routerLinkActive="active-nav">Login</button>
+
+      <button mat-button routerLink="/register" routerLinkActive="active-nav">Register</button>
+    } @else {
+      <button mat-button (click)="authService.logout()">Logout</button>
+    }
   </div>
 </mat-toolbar>
 
 <div class="container mt-4">
   <router-outlet></router-outlet>
 </div>
+>
